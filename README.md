@@ -15,13 +15,21 @@ npm run dev
 
 Production-сборка настроена на базовый путь:
 
-https://gh0st0fwar.github.io/devpulse/dist/
+https://gh0st0fwar.github.io/DevPulse/dist/
 
 ```bash
 npm run build
 ```
 
-Содержимое папки `dist/` нужно опубликовать в репозитории `devpulse` (например, закоммитить в ветку или папку, откуда GitHub Pages отдаёт статику).
+### Публикация на GitHub Pages
+
+1. В репозитории **DevPulse** открой **Settings → Pages**
+2. Source: **Deploy from a branch**
+3. Branch: **main**, folder: **/ (root)**
+4. После `git push` workflow `.github/workflows/deploy-pages.yml` соберёт проект и закоммитит папку `dist/`
+5. Сайт будет доступен по адресу выше (`dist/index.html` в корне репозитория)
+
+> Важно: base path в Vite — `/DevPulse/dist/` (регистр букв как в имени репозитория).
 
 ## Скрипты
 
