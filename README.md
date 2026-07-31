@@ -2,19 +2,30 @@
 
 Персональный дашборд продуктивности (учебный MVP по ТЗ).
 
-## Запуск
+## Запуск локально
 
 ```bash
 npm install
 npm run dev
 ```
 
+Открой: http://127.0.0.1:5173/
+
+## GitHub Pages
+
+Production-сборка настроена на базовый путь:
+
+https://gh0st0fwar.github.io/devpulse/dist/
+
+```bash
+npm run build
+```
+
+Содержимое папки `dist/` нужно опубликовать в репозитории `devpulse` (например, закоммитить в ветку или папку, откуда GitHub Pages отдаёт статику).
+
 ## Скрипты
 
 - `npm run dev` — локальная разработка
-- `npm run build` — проверка TypeScript + production-сборка
+- `npm run build` — TypeScript + сборка для GitHub Pages
+- `npm run preview` — предпросмотр production-сборки
 - `npm run lint` — Biome
-
-## TODO для сдачи
-
-Дополни этот README по разделу 6 ТЗ: установка, описание экранов, обоснование архитектуры, список сторонних библиотек с пояснениями «зачем».

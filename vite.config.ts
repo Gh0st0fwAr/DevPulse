@@ -1,9 +1,23 @@
+import { copyFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
 
-export default defineConfig({
-  plugins: [vue()],
+/** GitHub Pages: https://gh0st0fwar.github.io/devpulse/dist/ */
+const githubPagesBase = '/devpulse/dist/'
+
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? githubPagesBase : '/',
+  plugins: [
+    vue(),
+    {
+      name: 'copy-404-for-github-pages',
+      closeBundle() {
+        if (mode !== 'production') return
+        copyFileSync('dist/index.html', 'dist/404.html')
+      },
+    },
+  ],
   server: {
     host: '127.0.0.1',
     port: 5173,
@@ -20,4 +34,4 @@ export default defineConfig({
       '@shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
     },
   },
-})
+}))
