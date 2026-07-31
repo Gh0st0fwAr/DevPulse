@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply min-h-screen bg-surface-950 text-surface-100 antialiased;
+  }
+
+  #app {
+    @apply min-h-screen;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
+  }
+
+  /* TODO: доработай базовые UI-классы под свой дизайн */
+  .card {
+    @apply rounded-xl border border-surface-700 bg-surface-800/80 p-4;
+  }
+}
