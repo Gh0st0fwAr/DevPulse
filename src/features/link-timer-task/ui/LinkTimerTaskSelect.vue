@@ -23,9 +23,9 @@ function onChange(event: Event): void {
 
 <template>
   <label class="flex flex-col gap-1 text-sm">
-    <span class="text-surface-300">Задача для фокуса</span>
+    <span class="text-surface-600 dark:text-surface-300">Задача для фокуса</span>
     <select
-      class="rounded-lg border border-surface-600 bg-surface-900 px-3 py-2"
+      class="rounded-lg border border-surface-300 bg-white px-3 py-2 text-surface-900 dark:border-surface-600 dark:bg-surface-900 dark:text-surface-100"
       :value="state.linkedTaskId ?? ''"
       @change="onChange"
     >

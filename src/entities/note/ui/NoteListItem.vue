@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from '@shared/lib'
 import type { Note } from '../model/types'
 
 defineProps<{
@@ -19,6 +20,8 @@ defineEmits<{
     @click="$emit('select', note.id)"
   >
     <span class="font-medium">{{ note.title }}</span>
-    <span class="mt-1 block text-xs text-surface-400">TODO: тег / дата</span>
+    <span class="mt-1 block text-xs text-surface-500 dark:text-surface-400">
+      {{ note.tag || 'без тега' }} · {{ formatDate(note.lastUpdated) }}
+    </span>
   </button>
 </template>

@@ -4,12 +4,8 @@ import { NoteListItem, useNoteStore } from '@entities/note'
 import { CreateNoteButton } from '@features/create-note'
 import { NotesTagFilter } from '@features/filter-notes'
 import { renderMarkdown } from '@shared/lib'
-import { UiEmpty, UiInput } from '@shared/ui'
+import { UiButton, UiEmpty, UiInput } from '@shared/ui'
 
-/**
- * TODO: Master-Detail layout для заметок.
- * Слева список + фильтр, справа просмотр/редактирование Markdown.
- */
 const noteStore = useNoteStore()
 const tagFilter = ref('')
 
@@ -23,13 +19,33 @@ const selected = computed(() =>
 )
 
 const previewHtml = computed(() =>
-  selected.value
-    ? renderMarkdown('TODO: возьми markdown-поле выбранной заметки')
-    : '',
+  selected.value ? renderMarkdown(selected.value.content) : '',
 )
 
 function onCreate(): void {
-  // TODO: noteStore.addNote(…)
+  noteStore.addNote({ title: 'Без названия' })
+  const last = noteStore.notes[noteStore.notes.length - 1]
+  if (last) noteStore.selectNote(last.id)
+}
+
+function onTitleChange(value: string): void {
+  if (!selected.value) return
+  noteStore.updateNote(selected.value.id, { title: value })
+}
+
+function onContentChange(value: string): void {
+  if (!selected.value) return
+  noteStore.updateNote(selected.value.id, { content: value })
+}
+
+function onTagChange(value: string): void {
+  if (!selected.value) return
+  noteStore.updateNote(selected.value.id, { tag: value })
+}
+
+function onDelete(): void {
+  if (!selected.value) return
+  noteStore.removeNote(selected.value.id)
 }
 </script>
 
@@ -56,9 +72,36 @@ function onCreate(): void {
 
     <section class="card min-h-[320px]">
       <template v-if="selected">
-        <!-- TODO: редактирование title/content + live preview -->
-        <UiInput :model-value="selected.title" label="Заголовок" @update:model-value="() => {}" />
-        <div class="markdown-body mt-4 text-sm text-surface-300" v-html="previewHtml" />
+        <div class="mb-4 flex items-center justify-between gap-2">
+          <h3 class="font-medium">Редактирование</h3>
+          <UiButton variant="danger" @click="onDelete">Удалить</UiButton>
+        </div>
+
+        <div class="space-y-3">
+          <UiInput
+            :model-value="selected.title"
+            label="Заголовок"
+            @update:model-value="onTitleChange"
+          />
+
+          <UiInput
+            :model-value="selected.content"
+            label="Контент (Markdown)"
+            @update:model-value="onContentChange"
+          />
+
+          <UiInput
+            :model-value="selected.tag"
+            label="Тег"
+            placeholder="например: vue"
+            @update:model-value="onTagChange"
+          />
+        </div>
+
+        <div
+          class="prose prose-sm mt-4 max-w-none dark:prose-invert"
+          v-html="previewHtml"
+        />
       </template>
       <UiEmpty v-else title="Выбери заметку" description="Или создай новую слева" />
     </section>

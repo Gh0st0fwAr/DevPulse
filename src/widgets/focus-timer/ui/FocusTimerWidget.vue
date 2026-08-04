@@ -28,9 +28,9 @@ const {
 <template>
   <section class="card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
-      <p class="text-sm text-surface-400">{{ modeLabel }}</p>
+      <p class="text-sm text-surface-500 dark:text-surface-400">{{ modeLabel }}</p>
       <p class="font-mono text-4xl tracking-wider">{{ formattedTime }}</p>
-      <p class="mt-1 text-xs text-surface-500">
+      <p class="mt-1 text-xs text-surface-400 dark:text-surface-500">
         TODO: реализуй тики в useTimer
       </p>
     </div>

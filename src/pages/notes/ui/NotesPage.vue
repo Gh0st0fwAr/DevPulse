@@ -5,7 +5,7 @@ import { NotesLayout } from '@widgets/notes-layout'
 <template>
   <div class="space-y-2">
     <h1 class="text-2xl font-semibold">Заметки</h1>
-    <p class="text-sm text-surface-400">
+    <p class="text-sm text-surface-500 dark:text-surface-400">
       Модуль 3 ТЗ: master-detail, Markdown, фильтр по тегу.
     </p>
     <NotesLayout class="mt-4" />

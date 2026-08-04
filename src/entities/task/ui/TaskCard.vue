@@ -15,7 +15,7 @@ defineEmits<{
   <article class="card">
     <h3 class="font-medium">{{ task.title }}</h3>
 
-    <p v-if="task.description" class="mt-1 text-sm text-surface-400">
+    <p v-if="task.description" class="mt-1 text-sm text-surface-500 dark:text-surface-400">
       {{ task.description }}
     </p>
 
@@ -23,17 +23,17 @@ defineEmits<{
       <span
         v-for="tag in task.tags"
         :key="tag"
-        class="rounded-full bg-surface-700 px-2 py-0.5 text-xs text-surface-200"
+        class="rounded-full bg-surface-200 px-2 py-0.5 text-xs text-surface-700 dark:bg-surface-700 dark:text-surface-200"
       >
         {{ tag }}
       </span>
     </div>
 
-    <p class="mt-2 text-xs text-surface-400">
+    <p class="mt-2 text-xs text-surface-500 dark:text-surface-400">
       Дедлайн: {{ formatDate(task.deadline) }}
     </p>
 
-    <p class="mt-1 text-xs text-surface-400">
+    <p class="mt-1 text-xs text-surface-500 dark:text-surface-400">
       Сессии: {{ task.completedSessions }} / {{ task.plannedSessions }}
     </p>
 

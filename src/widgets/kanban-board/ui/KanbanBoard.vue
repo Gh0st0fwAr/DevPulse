@@ -53,9 +53,9 @@ function onDelete(id: string): void {
       <section
         v-for="status in TASK_STATUSES"
         :key="status"
-        class="rounded-xl border border-surface-700 bg-surface-900/40 p-3"
+        class="rounded-xl border border-surface-200 bg-surface-100 p-3 dark:border-surface-700 dark:bg-surface-900/40"
       >
-        <h3 class="mb-3 text-sm font-medium text-surface-300">
+        <h3 class="mb-3 text-sm font-medium text-surface-600 dark:text-surface-300">
           {{ TASK_STATUS_LABELS[status] }}
         </h3>
 

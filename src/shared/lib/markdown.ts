@@ -1,8 +1,7 @@
-/**
- * TODO: Markdown → HTML.
- * Подключи marked / markdown-it и верни безопасный HTML.
- * Подумай про XSS (в MVP часто достаточно базового парсинга).
- */
-export function renderMarkdown(_source: string): string {
-  return '<p>TODO: подключи парсер Markdown</p>'
+import { marked } from 'marked'
+
+export function renderMarkdown(source: string): string {
+  if (!source.trim()) return ''
+
+  return marked.parse(source.trim(), { async: false }) as string
 }

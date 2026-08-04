@@ -9,9 +9,11 @@ import { FocusTimerWidget } from '@widgets/focus-timer'
     <AppHeader />
 
     <!-- Глобальный виджет таймера: по ТЗ может быть на отдельной странице ИЛИ сквозным -->
-    <FocusTimerWidget class="mx-4 mt-4 sm:mx-6 lg:mx-8" />
+    <div class="page-container py-4">
+      <FocusTimerWidget />
+    </div>
 
-    <main class="page-container flex-1">
+    <main class="page-container flex-1 pt-0">
       <RouterView />
     </main>
   </div>

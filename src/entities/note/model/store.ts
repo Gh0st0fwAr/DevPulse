@@ -1,33 +1,75 @@
+import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Note } from './types'
 
-/**
- * TODO: реализуй store заметок + persistence в localStorage.
- */
 export const useNoteStore = defineStore('notes', () => {
-  const notes = ref<Note[]>([])
+  const notes = useLocalStorage<Note[]>('devpulse.notes', [])
   const selectedId = ref<string | null>(null)
 
-  function selectNote(_id: string | null): void {
-    // TODO
+  type AddNotePayload = {
+    title: string
+    content?: string
+    tag?: string
   }
 
-  function addNote(_payload: unknown): void {
-    // TODO
+  function selectNote(id: string | null): void {
+    if (id !== null && selectedId.value === id) {
+      selectedId.value = null
+      return
+    }
+    selectedId.value = id
   }
 
-  function updateNote(_id: string, _payload: unknown): void {
-    // TODO
+  function addNote(payload: AddNotePayload): void {
+    const title = payload.title.trim()
+    if (!title) return
+
+    const newNote: Note = {
+      id: crypto.randomUUID(),
+      title,
+      content: payload.content?.trim() ?? '',
+      tag: payload.tag?.trim() ?? '',
+      lastUpdated: new Date().toISOString(),
+    }
+
+    notes.value.push(newNote)
   }
 
-  function removeNote(_id: string): void {
-    // TODO
+  type UpdateNotePayload = Partial<Pick<Note, 'title' | 'content' | 'tag'>>
+
+  function updateNote(id: string, payload: UpdateNotePayload): void {
+    const index = notes.value.findIndex((note) => note.id === id)
+    if (index === -1) return
+
+    const note = notes.value[index]
+
+    if (payload.title !== undefined) {
+      note.title = payload.title.trim()
+    }
+    if (payload.content !== undefined) {
+      note.content = payload.content
+    }
+    if (payload.tag !== undefined) {
+      note.tag = payload.tag.trim()
+    }
+
+    note.lastUpdated = new Date().toISOString()
   }
 
-  function filterByTag(_tag: string): Note[] {
-    // TODO: фильтрация списка по тегу
-    return []
+  function removeNote(id: string): void {
+    const index = notes.value.findIndex((n) => n.id === id)
+    if (index === -1) return
+
+    notes.value.splice(index, 1)
+
+    if (selectedId.value === id) {
+      selectedId.value = null
+    }
+  }
+
+  function filterByTag(tag: string): Note[] {
+    return notes.value.filter((note) => note.tag === tag)
   }
 
   return {
