@@ -3,7 +3,7 @@ import { NoteListItem, useNoteStore } from "@entities/note";
 import { CreateNoteButton } from "@features/create-note";
 import { NotesTagFilter } from "@features/filter-notes";
 import { renderMarkdown } from "@shared/lib";
-import { UiButton, UiEmpty, UiInput } from "@shared/ui";
+import { UiButton, UiEmpty, UiInput, UiTextarea } from "@shared/ui";
 import { computed, ref } from "vue";
 
 const noteStore = useNoteStore();
@@ -85,9 +85,10 @@ function onDelete(): void {
             @update:model-value="onTitleChange"
           />
 
-          <UiInput
+          <UiTextarea
             :model-value="selected.content"
             label="Контент (Markdown)"
+            placeholder="Поддерживается Markdown: # заголовок, **жирный**, списки..."
             @update:model-value="onContentChange"
           />
 

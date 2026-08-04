@@ -1,0 +1,33 @@
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    modelValue: string;
+    label?: string;
+    error?: string;
+    placeholder?: string;
+    rows?: number;
+  }>(),
+  {
+    rows: 8,
+  },
+);
+
+defineEmits<{
+  "update:modelValue": [value: string];
+}>();
+</script>
+
+<template>
+  <label class="flex flex-col gap-1 text-sm">
+    <span v-if="label" class="text-surface-600 dark:text-surface-300">{{ label }}</span>
+    <textarea
+      class="resize-y rounded-lg border border-surface-300 bg-white px-3 py-2 text-surface-900 outline-none focus:ring-2 focus:ring-accent/50 dark:border-surface-600 dark:bg-surface-900 dark:text-surface-100"
+      :class="{ 'border-danger focus:ring-danger/50': Boolean(error) }"
+      :rows="rows"
+      :value="modelValue"
+      :placeholder="placeholder"
+      @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+    />
+    <span v-if="error" class="text-xs text-danger">{{ error }}</span>
+  </label>
+</template>
