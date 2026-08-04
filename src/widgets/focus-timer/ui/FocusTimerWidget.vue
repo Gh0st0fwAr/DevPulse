@@ -2,7 +2,9 @@
 import { useTimer } from '@shared/lib'
 import { UiButton } from '@shared/ui'
 import { LinkTimerTaskSelect } from '@features/link-timer-task'
+// import { useTimerStore } from '@entities/timer'
 
+// const timerStore = useTimerStore()
 /**
  * TODO: виджет фокус-таймера.
  * Подключи useTimer: start/pause/reset, отображение времени и режима.
@@ -17,6 +19,10 @@ const {
   pause,
   reset,
 } = useTimer()
+
+
+// timerStore.setRemaining(10)
+// timerStore.setStatus('running')
 </script>
 
 <template>

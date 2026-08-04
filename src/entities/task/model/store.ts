@@ -20,6 +20,10 @@ export const useTaskStore = defineStore("tasks", () => {
     return tasks.value.filter((task) => task.status === _status);
     // return []
   }
+
+  function getTaskById(_id: string): Task | undefined {
+    return tasks.value.find((task) => task.id === _id);
+  }
   // console.log(tasks.value)
   type AddTaskPayload = {
     title: string;
@@ -84,6 +88,7 @@ export const useTaskStore = defineStore("tasks", () => {
     addTask,
     removeTask,
     moveTask,
+    getTaskById,
     incrementCompletedSessions,
   };
 });
