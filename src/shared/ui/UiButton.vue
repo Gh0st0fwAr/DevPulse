@@ -1,16 +1,16 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    type?: 'button' | 'submit'
-    variant?: 'primary' | 'ghost' | 'danger'
-    disabled?: boolean
+    type?: "button" | "submit";
+    variant?: "primary" | "ghost" | "danger";
+    disabled?: boolean;
   }>(),
   {
-    type: 'button',
-    variant: 'primary',
+    type: "button",
+    variant: "primary",
     disabled: false,
   },
-)
+);
 </script>
 
 <template>

@@ -1,1 +1,1 @@
-export { default as NotesLayout } from './ui/NotesLayout.vue'
+export { default as NotesLayout } from "./ui/NotesLayout.vue";

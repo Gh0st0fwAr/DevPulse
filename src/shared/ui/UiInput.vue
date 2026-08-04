@@ -1,15 +1,15 @@
 <script setup lang="ts">
 defineProps<{
-  modelValue: string
-  label?: string
-  type?: string
-  error?: string
-  placeholder?: string
-}>()
+  modelValue: string;
+  label?: string;
+  type?: string;
+  error?: string;
+  placeholder?: string;
+}>();
 
 defineEmits<{
-  'update:modelValue': [value: string]
-}>()
+  "update:modelValue": [value: string];
+}>();
 </script>
 
 <template>

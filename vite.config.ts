@@ -3,7 +3,6 @@ import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
-/** GitHub Pages: https://gh0st0fwar.github.io/DevPulse/dist/ */
 const githubPagesBase = '/DevPulse/dist/'
 
 export default defineConfig(({ mode }) => ({

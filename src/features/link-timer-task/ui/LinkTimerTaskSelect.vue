@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useTaskStore } from '@entities/task'
-import { useTimer } from '@shared/lib'
+import { useTaskStore } from "@entities/task";
+import { useTimerStore } from "@entities/timer";
+import { computed } from "vue";
 
-/**
- * TODO: связать таймер с задачей из колонки «В работе».
- * Показывать только tasks со status === 'in_progress'.
- */
-const taskStore = useTaskStore()
-const { linkTask, state } = useTimer()
+const taskStore = useTaskStore();
+const timerStore = useTimerStore();
 
-const inProgressTasks = computed(() =>
-  // TODO: когда допишешь поля Task и store — здесь будет реальный список
-  taskStore.tasks.filter((task) => task.status === 'in_progress'),
-)
+const inProgressTasks = computed(() => taskStore.tasksByStatus.in_progress);
 
 function onChange(event: Event): void {
-  const value = (event.target as HTMLSelectElement).value
-  linkTask(value === '' ? null : value)
+  const value = (event.target as HTMLSelectElement).value;
+
+  if (value === "") {
+    timerStore.setLinkedTaskId(null);
+    return;
+  }
+
+  const task = taskStore.getTaskById(value);
+  if (task?.status === "in_progress") {
+    timerStore.setLinkedTaskId(value);
+  }
 }
 </script>
 
@@ -26,7 +28,7 @@ function onChange(event: Event): void {
     <span class="text-surface-600 dark:text-surface-300">Задача для фокуса</span>
     <select
       class="rounded-lg border border-surface-300 bg-white px-3 py-2 text-surface-900 dark:border-surface-600 dark:bg-surface-900 dark:text-surface-100"
-      :value="state.linkedTaskId ?? ''"
+      :value="timerStore.state.linkedTaskId ?? ''"
       @change="onChange"
     >
       <option value="">Без задачи</option>

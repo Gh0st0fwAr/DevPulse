@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { APP_NAME, ROUTES } from '@shared/config'
-import { useTheme } from '@shared/lib'
-import { UiButton } from '@shared/ui'
+import { APP_NAME, ROUTES } from "@shared/config";
+import { useTheme } from "@shared/lib";
+import { UiButton } from "@shared/ui";
+import { RouterLink } from "vue-router";
 
-const { isDark, toggleTheme } = useTheme()
+const { isDark, toggleTheme } = useTheme();
 </script>
 
 <template>

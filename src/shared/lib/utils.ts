@@ -1,5 +1,3 @@
-/** TODO: утилиты общего назначения (generateId, formatDate, parseTags…) */
-
 export function generateId(): string {
   return crypto.randomUUID();
 }

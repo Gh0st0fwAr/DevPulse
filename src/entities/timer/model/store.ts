@@ -1,54 +1,141 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { TimerMode, TimerState, TimerStatus } from './types'
-import { useTaskStore } from '@entities/task'
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import type {
+  SessionCompleteListener,
+  TimerMode,
+  TimerState,
+  TimerStatus,
+} from "./types";
 
-/** Длительности по ТЗ: 25 мин работа, 5 мин перерыв */
-// export const WORK_SECONDS = 25 * 60
-export const WORK_SECONDS = 5
-export const BREAK_SECONDS = 5
-// export const BREAK_SECONDS = 5 * 60
+const DEBUG_TIMER =
+  import.meta.env.DEV && import.meta.env.VITE_DEBUG_TIMER === "1";
 
-/**
- * TODO: храни здесь «состояние» таймера.
- * Саму логику тиков лучше вынести в composable useTimer (shared/lib или features).
- */
-export const useTimerStore = defineStore('timer', () => {
+export const WORK_SECONDS = DEBUG_TIMER ? 5 : 25 * 60;
+export const BREAK_SECONDS = DEBUG_TIMER ? 5 : 5 * 60;
+
+function durationForMode(mode: TimerMode): number {
+  return mode === "work" ? WORK_SECONDS : BREAK_SECONDS;
+}
+
+let tickIntervalId: ReturnType<typeof setInterval> | null = null;
+let visibilityHandler: (() => void) | null = null;
+const sessionCompleteListeners = new Set<SessionCompleteListener>();
+
+export function subscribeSessionComplete(
+  listener: SessionCompleteListener,
+): () => void {
+  sessionCompleteListeners.add(listener);
+  return () => sessionCompleteListeners.delete(listener);
+}
+
+function emitSessionComplete(mode: TimerMode): void {
+  for (const listener of sessionCompleteListeners) {
+    listener(mode);
+  }
+}
+
+export const useTimerStore = defineStore("timer", () => {
   const state = ref<TimerState>({
-    mode: 'work',
-    status: 'idle',
+    mode: "work",
+    status: "idle",
     remainingSeconds: WORK_SECONDS,
     linkedTaskId: null,
-  })
+    endsAt: null,
+  });
 
-  function setStatus(_status: TimerStatus): void {
-    // TODO
-    state.value.status = _status;
+  function syncRemainingFromEndsAt(): void {
+    if (state.value.endsAt === null) return;
+    state.value.remainingSeconds = Math.max(
+      0,
+      Math.ceil((state.value.endsAt - Date.now()) / 1000),
+    );
   }
 
-  function setMode(_mode: TimerMode): void {
-    // TODO
-    state.value.mode = _mode;
-  }
-
-  function setRemaining(_seconds: number): void {
-    // TODO
-    state.value.remainingSeconds = _seconds;
-  }
-
-  function linkTask(_taskId: string | null): void {
-    // TODO: только задачи со статусом in_progress
-    // state.value.linkedTaskId = _taskId;
-    if (_taskId === null) {
-      state.value.linkedTaskId = null;
-    } else {
-      const task = useTaskStore().getTaskById(_taskId);
-      if (!task) return;
-      if (task.status === 'in_progress') {
-        state.value.linkedTaskId = _taskId;
-      }
+  function clearTickEngine(): void {
+    if (tickIntervalId !== null) {
+      clearInterval(tickIntervalId);
+      tickIntervalId = null;
     }
+    if (visibilityHandler !== null && typeof document !== "undefined") {
+      document.removeEventListener("visibilitychange", visibilityHandler);
+      visibilityHandler = null;
+    }
+  }
 
+  function onTick(): void {
+    if (state.value.status !== "running") return;
+
+    syncRemainingFromEndsAt();
+
+    if (state.value.remainingSeconds > 0) return;
+
+    const completedMode = state.value.mode;
+    emitSessionComplete(completedMode);
+
+    const nextMode: TimerMode = completedMode === "work" ? "break" : "work";
+    const duration = durationForMode(nextMode);
+
+    state.value.mode = nextMode;
+    state.value.remainingSeconds = duration;
+    state.value.endsAt = Date.now() + duration * 1000;
+    state.value.status = "running";
+  }
+
+  function startTickEngine(): void {
+    clearTickEngine();
+    syncRemainingFromEndsAt();
+
+    tickIntervalId = setInterval(onTick, 1000);
+
+    if (typeof document !== "undefined") {
+      visibilityHandler = () => syncRemainingFromEndsAt();
+      document.addEventListener("visibilitychange", visibilityHandler);
+    }
+  }
+
+  function setStatus(status: TimerStatus): void {
+    state.value.status = status;
+  }
+
+  function setMode(mode: TimerMode): void {
+    state.value.mode = mode;
+  }
+
+  function setRemaining(seconds: number): void {
+    state.value.remainingSeconds = seconds;
+  }
+
+  function setLinkedTaskId(taskId: string | null): void {
+    state.value.linkedTaskId = taskId;
+  }
+
+  function setEndsAt(timestamp: number | null): void {
+    state.value.endsAt = timestamp;
+  }
+
+  function start(): void {
+    if (state.value.status === "running") return;
+
+    const remaining = state.value.remainingSeconds;
+    state.value.endsAt = Date.now() + remaining * 1000;
+    state.value.status = "running";
+    startTickEngine();
+  }
+
+  function pause(): void {
+    if (state.value.status !== "running") return;
+
+    syncRemainingFromEndsAt();
+    clearTickEngine();
+    state.value.endsAt = null;
+    state.value.status = "paused";
+  }
+
+  function reset(): void {
+    clearTickEngine();
+    state.value.remainingSeconds = durationForMode(state.value.mode);
+    state.value.endsAt = null;
+    state.value.status = "idle";
   }
 
   return {
@@ -56,6 +143,11 @@ export const useTimerStore = defineStore('timer', () => {
     setStatus,
     setMode,
     setRemaining,
-    linkTask,
-  }
-})
+    setLinkedTaskId,
+    setEndsAt,
+    start,
+    pause,
+    reset,
+    syncRemainingFromEndsAt,
+  };
+});

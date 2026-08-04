@@ -1,75 +1,76 @@
-import { useLocalStorage } from '@vueuse/core'
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { Note } from './types'
+import { generateId } from "@shared/lib";
+import { useLocalStorage } from "@vueuse/core";
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import type { Note } from "./types";
 
-export const useNoteStore = defineStore('notes', () => {
-  const notes = useLocalStorage<Note[]>('devpulse.notes', [])
-  const selectedId = ref<string | null>(null)
+export const useNoteStore = defineStore("notes", () => {
+  const notes = useLocalStorage<Note[]>("devpulse.notes", []);
+  const selectedId = ref<string | null>(null);
 
   type AddNotePayload = {
-    title: string
-    content?: string
-    tag?: string
-  }
+    title: string;
+    content?: string;
+    tag?: string;
+  };
 
   function selectNote(id: string | null): void {
     if (id !== null && selectedId.value === id) {
-      selectedId.value = null
-      return
+      selectedId.value = null;
+      return;
     }
-    selectedId.value = id
+    selectedId.value = id;
   }
 
   function addNote(payload: AddNotePayload): void {
-    const title = payload.title.trim()
-    if (!title) return
+    const title = payload.title.trim();
+    if (!title) return;
 
     const newNote: Note = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       title,
-      content: payload.content?.trim() ?? '',
-      tag: payload.tag?.trim() ?? '',
+      content: payload.content?.trim() ?? "",
+      tag: payload.tag?.trim() ?? "",
       lastUpdated: new Date().toISOString(),
-    }
+    };
 
-    notes.value.push(newNote)
+    notes.value.push(newNote);
   }
 
-  type UpdateNotePayload = Partial<Pick<Note, 'title' | 'content' | 'tag'>>
+  type UpdateNotePayload = Partial<Pick<Note, "title" | "content" | "tag">>;
 
   function updateNote(id: string, payload: UpdateNotePayload): void {
-    const index = notes.value.findIndex((note) => note.id === id)
-    if (index === -1) return
+    const index = notes.value.findIndex((note) => note.id === id);
+    if (index === -1) return;
 
-    const note = notes.value[index]
+    const note = notes.value[index];
 
     if (payload.title !== undefined) {
-      note.title = payload.title.trim()
+      note.title = payload.title.trim();
     }
     if (payload.content !== undefined) {
-      note.content = payload.content
+      note.content = payload.content;
     }
     if (payload.tag !== undefined) {
-      note.tag = payload.tag.trim()
+      note.tag = payload.tag.trim();
     }
 
-    note.lastUpdated = new Date().toISOString()
+    note.lastUpdated = new Date().toISOString();
   }
 
   function removeNote(id: string): void {
-    const index = notes.value.findIndex((n) => n.id === id)
-    if (index === -1) return
+    const index = notes.value.findIndex((n) => n.id === id);
+    if (index === -1) return;
 
-    notes.value.splice(index, 1)
+    notes.value.splice(index, 1);
 
     if (selectedId.value === id) {
-      selectedId.value = null
+      selectedId.value = null;
     }
   }
 
   function filterByTag(tag: string): Note[] {
-    return notes.value.filter((note) => note.tag === tag)
+    return notes.value.filter((note) => note.tag === tag);
   }
 
   return {
@@ -80,5 +81,5 @@ export const useNoteStore = defineStore('notes', () => {
     updateNote,
     removeNote,
     filterByTag,
-  }
-})
+  };
+});

@@ -1,13 +1,13 @@
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark, useToggle } from "@vueuse/core";
 
 export function useTheme() {
   const isDark = useDark({
-    storageKey: 'devpulse.theme',
-    valueDark: 'dark',
-    valueLight: 'light',
-  })
+    storageKey: "devpulse.theme",
+    valueDark: "dark",
+    valueLight: "light",
+  });
 
-  const toggleTheme = useToggle(isDark)
+  const toggleTheme = useToggle(isDark);
 
-  return { isDark, toggleTheme }
+  return { isDark, toggleTheme };
 }

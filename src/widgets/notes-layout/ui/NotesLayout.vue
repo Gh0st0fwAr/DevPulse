@@ -1,51 +1,52 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { NoteListItem, useNoteStore } from '@entities/note'
-import { CreateNoteButton } from '@features/create-note'
-import { NotesTagFilter } from '@features/filter-notes'
-import { renderMarkdown } from '@shared/lib'
-import { UiButton, UiEmpty, UiInput } from '@shared/ui'
+import { NoteListItem, useNoteStore } from "@entities/note";
+import { CreateNoteButton } from "@features/create-note";
+import { NotesTagFilter } from "@features/filter-notes";
+import { renderMarkdown } from "@shared/lib";
+import { UiButton, UiEmpty, UiInput } from "@shared/ui";
+import { computed, ref } from "vue";
 
-const noteStore = useNoteStore()
-const tagFilter = ref('')
+const noteStore = useNoteStore();
+const tagFilter = ref("");
 
 const filteredNotes = computed(() => {
-  if (!tagFilter.value.trim()) return noteStore.notes
-  return noteStore.filterByTag(tagFilter.value.trim())
-})
+  if (!tagFilter.value.trim()) return noteStore.notes;
+  return noteStore.filterByTag(tagFilter.value.trim());
+});
 
-const selected = computed(() =>
-  noteStore.notes.find((note) => note.id === noteStore.selectedId) ?? null,
-)
+const selected = computed(
+  () =>
+    noteStore.notes.find((note) => note.id === noteStore.selectedId) ?? null,
+);
 
 const previewHtml = computed(() =>
-  selected.value ? renderMarkdown(selected.value.content) : '',
-)
+  selected.value ? renderMarkdown(selected.value.content) : "",
+);
 
 function onCreate(): void {
-  noteStore.addNote({ title: 'Без названия' })
-  const last = noteStore.notes[noteStore.notes.length - 1]
-  if (last) noteStore.selectNote(last.id)
+  noteStore.addNote({ title: "Без названия" });
+  const last = noteStore.notes[noteStore.notes.length - 1];
+  if (last) noteStore.selectNote(last.id);
 }
 
 function onTitleChange(value: string): void {
-  if (!selected.value) return
-  noteStore.updateNote(selected.value.id, { title: value })
+  if (!selected.value) return;
+  noteStore.updateNote(selected.value.id, { title: value });
 }
 
 function onContentChange(value: string): void {
-  if (!selected.value) return
-  noteStore.updateNote(selected.value.id, { content: value })
+  if (!selected.value) return;
+  noteStore.updateNote(selected.value.id, { content: value });
 }
 
 function onTagChange(value: string): void {
-  if (!selected.value) return
-  noteStore.updateNote(selected.value.id, { tag: value })
+  if (!selected.value) return;
+  noteStore.updateNote(selected.value.id, { tag: value });
 }
 
 function onDelete(): void {
-  if (!selected.value) return
-  noteStore.removeNote(selected.value.id)
+  if (!selected.value) return;
+  noteStore.removeNote(selected.value.id);
 }
 </script>
 

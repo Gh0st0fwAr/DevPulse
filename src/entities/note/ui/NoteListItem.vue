@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { formatDate } from '@shared/lib'
-import type { Note } from '../model/types'
+import { formatDate } from "@shared/lib";
+import type { Note } from "../model/types";
 
 defineProps<{
-  note: Note
-  active?: boolean
-}>()
+  note: Note;
+  active?: boolean;
+}>();
 
 defineEmits<{
-  select: [id: string]
-}>()
+  select: [id: string];
+}>();
 </script>
 
 <template>

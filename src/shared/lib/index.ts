@@ -3,7 +3,6 @@ export {
   formatDate,
   formatTime,
   parseTags,
-} from './utils'
-export { useTimer } from './useTimer'
-export { useTheme } from './useTheme'
-export { renderMarkdown } from './markdown'
+} from "./utils";
+export { useTheme } from "./useTheme";
+export { renderMarkdown } from "./markdown";

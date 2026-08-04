@@ -1,1 +1,1 @@
-export { default as TimerPage } from './ui/TimerPage.vue'
+export { default as TimerPage } from "./ui/TimerPage.vue";

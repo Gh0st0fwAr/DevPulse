@@ -1,12 +1,40 @@
 <script setup lang="ts">
-defineProps<{
-  open: boolean
-  title?: string
-}>()
+import { onUnmounted, watch } from "vue";
 
-defineEmits<{
-  close: []
-}>()
+const props = defineProps<{
+  open: boolean;
+  title?: string;
+}>();
+
+const emit = defineEmits<{
+  close: [];
+}>();
+
+function onEscape(event: KeyboardEvent): void {
+  if (event.key === "Escape") {
+    emit("close");
+  }
+}
+
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (typeof document === "undefined") return;
+
+    if (isOpen) {
+      document.addEventListener("keydown", onEscape);
+    } else {
+      document.removeEventListener("keydown", onEscape);
+    }
+  },
+  { immediate: true },
+);
+
+onUnmounted(() => {
+  if (typeof document !== "undefined") {
+    document.removeEventListener("keydown", onEscape);
+  }
+});
 </script>
 
 <template>
@@ -14,7 +42,7 @@ defineEmits<{
     <div
       v-if="open"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      @click.self="$emit('close')"
+      @click.self="emit('close')"
     >
       <div
         class="w-full max-w-lg rounded-xl border border-surface-200 bg-white p-4 shadow-xl dark:border-surface-700 dark:bg-surface-800"
@@ -26,7 +54,7 @@ defineEmits<{
           <button
             type="button"
             class="text-surface-500 hover:text-surface-800 dark:text-surface-400 dark:hover:text-surface-100"
-            @click="$emit('close')"
+            @click="emit('close')"
           >
             ✕
           </button>

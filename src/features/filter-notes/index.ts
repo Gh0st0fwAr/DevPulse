@@ -1,1 +1,1 @@
-export { default as NotesTagFilter } from './ui/NotesTagFilter.vue'
+export { default as NotesTagFilter } from "./ui/NotesTagFilter.vue";

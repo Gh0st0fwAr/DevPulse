@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import { AppHeader } from '@widgets/app-header'
-import { FocusTimerWidget } from '@widgets/focus-timer'
+import { useTimerTaskSync } from "@features/run-timer";
+import { AppHeader } from "@widgets/app-header";
+import { FocusTimerWidget } from "@widgets/focus-timer";
+import { RouterView } from "vue-router";
+
+useTimerTaskSync();
 </script>
 
 <template>
   <div class="flex min-h-screen flex-col">
     <AppHeader />
 
-    <!-- Глобальный виджет таймера: по ТЗ может быть на отдельной странице ИЛИ сквозным -->
     <div class="page-container py-4">
       <FocusTimerWidget />
     </div>

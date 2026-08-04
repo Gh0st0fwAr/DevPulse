@@ -1,1 +1,1 @@
-export { default as FocusTimerWidget } from './ui/FocusTimerWidget.vue'
+export { default as FocusTimerWidget } from "./ui/FocusTimerWidget.vue";

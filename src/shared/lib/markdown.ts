@@ -1,7 +1,7 @@
-import { marked } from 'marked'
+import { marked } from "marked";
 
 export function renderMarkdown(source: string): string {
-  if (!source.trim()) return ''
+  if (!source.trim()) return "";
 
-  return marked.parse(source.trim(), { async: false }) as string
+  return marked.parse(source.trim(), { async: false }) as string;
 }

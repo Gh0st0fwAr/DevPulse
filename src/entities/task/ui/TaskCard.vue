@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { formatDate } from '@shared/lib'
-import type { Task } from '../model/types'
+import { formatDate } from "@shared/lib";
+import type { Task } from "../model/types";
 
 defineProps<{
-  task: Task
-}>()
+  task: Task;
+}>();
 
 defineEmits<{
-  delete: [id: string]
-}>()
+  delete: [id: string];
+}>();
 </script>
 
 <template>

@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { useTimer } from '@shared/lib'
-import { UiButton } from '@shared/ui'
-import { LinkTimerTaskSelect } from '@features/link-timer-task'
-// import { useTimerStore } from '@entities/timer'
+import { useTaskStore } from "@entities/task";
+import { LinkTimerTaskSelect } from "@features/link-timer-task";
+import { useRunTimer } from "@features/run-timer";
+import { UiButton } from "@shared/ui";
+import { computed } from "vue";
 
-// const timerStore = useTimerStore()
-/**
- * TODO: виджет фокус-таймера.
- * Подключи useTimer: start/pause/reset, отображение времени и режима.
- * Звук / Notification — в момент завершения сессии.
- */
+const taskStore = useTaskStore();
 const {
   formattedTime,
   modeLabel,
@@ -18,11 +14,14 @@ const {
   start,
   pause,
   reset,
-} = useTimer()
+  state,
+} = useRunTimer();
 
-
-// timerStore.setRemaining(10)
-// timerStore.setStatus('running')
+const linkedTaskTitle = computed(() => {
+  const id = state.value.linkedTaskId;
+  if (!id) return null;
+  return taskStore.getTaskById(id)?.title ?? null;
+});
 </script>
 
 <template>
@@ -30,8 +29,8 @@ const {
     <div>
       <p class="text-sm text-surface-500 dark:text-surface-400">{{ modeLabel }}</p>
       <p class="font-mono text-4xl tracking-wider">{{ formattedTime }}</p>
-      <p class="mt-1 text-xs text-surface-400 dark:text-surface-500">
-        TODO: реализуй тики в useTimer
+      <p v-if="linkedTaskTitle" class="mt-1 text-xs text-surface-500 dark:text-surface-400">
+        Задача: {{ linkedTaskTitle }}
       </p>
     </div>
 

@@ -1,1 +1,1 @@
-export { default as KanbanBoard } from './ui/KanbanBoard.vue'
+export { default as KanbanBoard } from "./ui/KanbanBoard.vue";
