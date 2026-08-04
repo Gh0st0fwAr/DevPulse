@@ -2,7 +2,7 @@
 
 Персональный дашборд продуктивности: задачи, фокус-таймер и заметки в одном интерфейсе.
 
-**Демо (GitHub Pages):** [gh0st0fwar.github.io/DevPulse/dist/](https://gh0st0fwar.github.io/DevPulse/dist/)
+**Демо (GitHub Pages):** [gh0st0fwar.github.io/DevPulse/](https://gh0st0fwar.github.io/DevPulse/)
 
 ```bash
 npm install
@@ -195,7 +195,7 @@ src/
 │   ├── timer/model/        # TimerState, tick engine, endsAt
 │   └── note/model/         # Note, store, NoteListItem
 └── shared/
-    ├── ui/                 # UiButton, UiInput, UiModal, UiEmpty
+    ├── ui/                 # UiButton, UiInput, UiTextarea, UiModal, UiEmpty
     ├── lib/                # utils, markdown, useTheme
     └── config/             # APP_NAME, ROUTES
 ```
@@ -244,10 +244,13 @@ src/
 
 ### GitHub Pages
 
-- **Base path:** `/DevPulse/dist/` (см. `vite.config.ts`).
-- Workflow: `.github/workflows/deploy-pages.yml` — build + commit `dist/` на push в `main`.
-- **Settings → Pages:** branch `main`, folder `/ (root)`.
-- SPA-fallback: `dist/404.html` копируется из `index.html` при сборке.
+- **URL:** `https://<username>.github.io/DevPulse/`
+- **Base path:** `/DevPulse/` (см. `vite.config.ts`).
+- **Деплой:** GitHub Actions загружает **содержимое `dist/`** как корень сайта — папка `dist/` в репозиторий не коммитится.
+- **Settings → Pages → Build and deployment → Source:** `GitHub Actions`.
+- **SPA / виртуальный роутинг:** при сборке в `dist/` создаются `404.html` (копия `index.html`) и `.nojekyll` — прямой заход на `/DevPulse/tasks`, `/DevPulse/notes` и F5 работают корректно.
+
+Workflow: `.github/workflows/deploy-pages.yml` — `npm run build` → artifact → `deploy-pages`.
 
 ### Локальная разработка
 

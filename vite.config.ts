@@ -1,19 +1,20 @@
-import { copyFileSync } from 'node:fs'
+import { copyFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
-const githubPagesBase = '/DevPulse/dist/'
+const githubPagesBase = '/DevPulse/'
 
 export default defineConfig(({ mode }) => ({
   base: mode === 'production' ? githubPagesBase : '/',
   plugins: [
     vue(),
     {
-      name: 'copy-404-for-github-pages',
+      name: 'github-pages-spa-fallback',
       closeBundle() {
         if (mode !== 'production') return
         copyFileSync('dist/index.html', 'dist/404.html')
+        writeFileSync('dist/.nojekyll', '')
       },
     },
   ],
